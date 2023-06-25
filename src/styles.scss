@@ -1,0 +1,44 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css');
+
+@font-face {
+    font-family: "Handle";
+    src: local("Handle"), url('./assets/fonts/Handlee-Regular.ttf') format("truetype");
+}
+
+@font-face {
+    font-family: "Crimson";
+    src: local("Crimson"), url('./assets/fonts/CrimsonPro-Regular.ttf') format("truetype");
+}
+
+.text-handle{
+    font-family:'Handle';
+}
+
+.text-crimson{
+    font-family:'Crimson'
+}
+
+.card{
+    box-shadow: 0 0 20px 5px rgb(230, 230, 231);
+}
+
+
+
+body{
+    font-family: 'Handle';
+    font-size: 1.3rem
+}
+
+h1{
+    font-size: 4em;
+}
+
+//CURSOR
+.cursor-pointer{
+    cursor: pointer;
+}
+
+.cursor-none{
+    cursor: auto !important;
+}
