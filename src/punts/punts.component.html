@@ -9,7 +9,7 @@
         a la col·lecció de baix. Les dues primeres targetes hi són per defecte, les pots eliminar.</div>
 
     <!--MAP-->
-    <app-map class="mb-3" (coordEmitter)="openInput($event)"></app-map>
+    <app-map class="mb-3" (coordEmitter)="openNewPointInput($event)"></app-map>
 
     <form *ngIf="showForm" class="text-crimson my-4" [formGroup]="markerForm" (ngSubmit)="submitForm()">
         <div>

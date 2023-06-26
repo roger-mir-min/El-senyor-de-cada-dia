@@ -35,7 +35,7 @@ export class PuntsComponent implements OnInit {
     console.log("Punts component initialized.");
   }
 
-  openInput(e:any) {
+  openNewPointInput(e:any) {
     console.log("Objecte rebut de map a punts: " + e.target);
     this.currentCoords = { ...e };
     console.log("current coords: " + this.currentCoords);
