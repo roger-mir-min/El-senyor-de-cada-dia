@@ -56,11 +56,8 @@ export class PuntsComponent implements OnInit {
       fav: formValue.inputFav
     }
 
-    this.puntsService.addMarker(newPunt);
-
-    //reset form
+    this.puntsService.addMarkerToArr(newPunt);
     this.markerForm.reset;
-    //amaguem form
     this.showForm = false;
   }
 

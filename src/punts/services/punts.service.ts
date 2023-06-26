@@ -1,18 +1,11 @@
 import { Injectable, signal } from '@angular/core';
 import { Punt } from 'src/shared/models/interfaces';
 import { datasetPuntsArray } from 'src/assets/data/punts';
-import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class PuntsService {
 
-    createMarker = new BehaviorSubject<Punt | null>(null);
-    createMarker$ = this.createMarker.asObservable();
-
-
     markersArray = signal<Punt[]>([]);
-    updateMarkersArray = new BehaviorSubject<Punt[] | null>([]);
-    updateMarkersArray$ = this.updateMarkersArray.asObservable();
 
     constructor() {
         this.markersArray.set(this.getInitialArray());
@@ -28,7 +21,7 @@ export class PuntsService {
         }
     }
 
-    addMarker(marker: Punt) {
+    addMarkerToArr(marker: Punt) {
         //push new point to array
         this.markersArray.mutate(arr=>arr.push(marker));
         //store new point in localStorage
@@ -44,13 +37,11 @@ export class PuntsService {
     deleteMarkerAndReload(markerName: string) {
         this.deleteMarkerFromArr(markerName);
         localStorage.setItem('elsenyor-array', JSON.stringify(this.markersArray()));
-        location.reload();
     }
 
     deleteAllMarkers() {
         this.markersArray.update(arr => []);
         localStorage.removeItem('elsenyor-array');
-        location.reload();
     }
 
     changeFav(marker: Punt, val: boolean) {
@@ -64,7 +55,6 @@ export class PuntsService {
             fav: val //passem el nou estat de fav
         }));
         localStorage.setItem('elsenyor-array', JSON.stringify(this.markersArray()));
-        location.reload();
     }
 
 }
