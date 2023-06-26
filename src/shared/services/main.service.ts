@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Punt } from '../models/interfaces';
 import { datasetPuntsArray } from 'src/assets/data/punts';
 import { BehaviorSubject } from 'rxjs';
@@ -10,16 +10,12 @@ export class MainService {
     createMarker$ = this.createMarker.asObservable();
 
 
-    markersArray: Punt[] = [];
+    markersArray = signal<Punt[]>([]);
     updateMarkersArray = new BehaviorSubject<Punt[] | null>([]);
     updateMarkersArray$ = this.updateMarkersArray.asObservable();
 
     constructor() {
-        this.updateMarkersArray$.subscribe(res => {
-            this.markersArray = res!;
-        });
-        this.updateMarkersArray.next(this.getInitialArray())
-        
+        this.markersArray.set(this.getInitialArray());
     }
     
     //get localStorage or hard-coded dataSet
@@ -28,48 +24,46 @@ export class MainService {
             console.log("L'array de localStorage: " + JSON.parse(localStorage.getItem('elsenyor-array')!));
             return JSON.parse(localStorage.getItem('elsenyor-array')!);
         } else {
-            return this.markersArray = datasetPuntsArray;
+            return datasetPuntsArray;
         }
     }
 
     addMarker(marker: Punt) {
         //push new point to array
-        this.markersArray.push(marker);
-        //send new point to components
-        this.createMarker.next(marker);
+        this.markersArray.mutate(arr=>arr.push(marker));
         //store new point in localStorage
-        localStorage.setItem('elsenyor-array', JSON.stringify(this.markersArray));
+        localStorage.setItem('elsenyor-array', JSON.stringify(this.markersArray()));
 
-        console.log("Ara markersArray és: " + this.markersArray);
+        console.log("Ara markersArray és: " + this.markersArray());
     }
 
     deleteMarkerFromArr(markerName: string) {
-        this.markersArray = [...this.markersArray.filter(obj => obj.name !== markerName)];
+        this.markersArray.update(arr=>[...arr.filter(obj => obj.name !== markerName)]);
     }
     
     deleteMarkerAndReload(markerName: string) {
         this.deleteMarkerFromArr(markerName);
-        localStorage.setItem('elsenyor-array', JSON.stringify(this.markersArray));
+        localStorage.setItem('elsenyor-array', JSON.stringify(this.markersArray()));
         location.reload();
     }
 
     deleteAllMarkers() {
-        this.updateMarkersArray.next(null); //crec que no cal
+        this.markersArray.update(arr => []);
         localStorage.removeItem('elsenyor-array');
         location.reload();
     }
 
     changeFav(marker: Punt, val: boolean) {
         this.deleteMarkerFromArr(marker.name);
-        this.markersArray.push({
+        this.markersArray.mutate(arr=>arr.push({
             name: marker.name,
             lat: marker.lat,
             lng: marker.lng,
             descripcio: marker.descripcio,
             default: marker.default,
             fav: val //passem el nou estat de fav
-        });
-        localStorage.setItem('elsenyor-array', JSON.stringify(this.markersArray));
+        }));
+        localStorage.setItem('elsenyor-array', JSON.stringify(this.markersArray()));
         location.reload();
     }
 

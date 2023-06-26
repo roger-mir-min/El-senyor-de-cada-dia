@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, ViewChild, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, ViewChild, Output, signal } from '@angular/core';
 import { Map, marker, polyline, tileLayer } from 'leaflet';
 import { datasetPuntsArray } from 'src/assets/data/punts';
 import { datasetRutesArray } from 'src/assets/data/rutes';
@@ -22,7 +22,7 @@ export class MapRutesComponent implements OnInit {
 
   map!: Map;
 
-  rutesArray: Ruta[] = [];
+  rutesArray = signal<Ruta[]>([]);
   @Output() coordEmitter = new EventEmitter<{ lat: number, lng: number }>();
   
   showArray = false;
@@ -84,7 +84,7 @@ export class MapRutesComponent implements OnInit {
     }).addTo(this.map);
 
     //POLYLINE - ADD ROUTE a partir de l'array
-    this.rutesArray.map(ruta => {
+    this.rutesArray().map(ruta => {
       const rutaItem = polyline(ruta.coords, { color: this.getRandomColor() }).addTo(this.map);
     });
 

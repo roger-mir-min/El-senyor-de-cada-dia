@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, ViewChild, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, ViewChild, Output, effect } from '@angular/core';
 import { Map, marker, tileLayer } from 'leaflet';
 import { datasetPuntsArray } from 'src/assets/data/punts';
 import { Punt } from 'src/shared/models/interfaces';
@@ -45,7 +45,7 @@ export class MapComponent implements OnInit {
     }).addTo(this.map);
 
     //MARKERS
-    this.markersArr.map(mark => {
+    this.markersArr().map(mark => {
       const markerItem = marker([mark.lat, mark.lng], { draggable: true }).addTo(this.map).bindPopup(`${mark.name}`);
       // markerItem.on('move', () => { map.removeLayer(markerItem) });
     });
@@ -68,8 +68,15 @@ export class MapComponent implements OnInit {
           <button (click)="deleteMarker(e)">Eliminar marcador</button>`);
       }
     });
-    
   }
+
+  reloadAfterMarkersArrUpdate = effect(() => {
+  console.log(this.markersArr());
+      this.markersArr().map(mark => {
+      const markerItem = marker([mark.lat, mark.lng], { draggable: true }).addTo(this.map).bindPopup(`${mark.name}`);
+      // markerItem.on('move', () => { map.removeLayer(markerItem) });
+    });
+});
 
   //when clicking on a place card, scroll to top (where map component is)
   //and center map into the card coordenates

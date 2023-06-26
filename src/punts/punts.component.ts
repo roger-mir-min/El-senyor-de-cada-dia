@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, signal } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Map, marker, tileLayer } from 'leaflet';
 import { datasetPuntsArray } from 'src/assets/data/punts';
@@ -15,13 +15,13 @@ import { MapComponent } from './components/map/map.component';
 export class PuntsComponent implements OnInit {
   @ViewChild(MapComponent) mapComponent!: MapComponent;
 
-  markersArr$: Observable<Punt[] | null>;
+  markersArr = signal<Punt[]>([]);
   currentCoords: Coords = { lat: 0, lng: 0 };
   showForm = false;
   markerForm: FormGroup;
 
   constructor(private fb: FormBuilder, private mainService: MainService) {
-    this.markersArr$ = this.mainService.updateMarkersArray$;
+    this.markersArr = this.mainService.markersArray;
 
     this.markerForm = this.fb.group({
       inputNom: "",
