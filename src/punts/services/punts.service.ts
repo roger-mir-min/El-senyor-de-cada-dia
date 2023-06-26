@@ -1,10 +1,10 @@
 import { Injectable, signal } from '@angular/core';
-import { Punt } from '../models/interfaces';
+import { Punt } from 'src/shared/models/interfaces';
 import { datasetPuntsArray } from 'src/assets/data/punts';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
-export class MainService {
+export class PuntsService {
 
     createMarker = new BehaviorSubject<Punt | null>(null);
     createMarker$ = this.createMarker.asObservable();

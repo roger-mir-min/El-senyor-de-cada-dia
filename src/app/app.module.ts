@@ -6,8 +6,6 @@ import { AppRoutingModule } from './app-routing.module';
 //COMPONENTS
 import { AppComponent } from './app.component';
 
-//SERVICES
-import { MainService } from 'src/shared/services/main.service';
 
 @NgModule({
   declarations: [
@@ -17,7 +15,7 @@ import { MainService } from 'src/shared/services/main.service';
     BrowserModule,
     AppRoutingModule
   ],
-  providers: [MainService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

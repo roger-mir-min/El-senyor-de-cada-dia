@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Map, marker, tileLayer } from 'leaflet';
 import { datasetPuntsArray } from 'src/assets/data/punts';
 import { Coords, Punt } from 'src/shared/models/interfaces';
-import { MainService } from 'src/shared/services/main.service';
+import { PuntsService } from './services/punts.service';
 import { Observable } from 'rxjs';
 import { MapComponent } from './components/map/map.component';
 
@@ -20,8 +20,8 @@ export class PuntsComponent implements OnInit {
   showForm = false;
   markerForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private mainService: MainService) {
-    this.markersArr = this.mainService.markersArray;
+  constructor(private fb: FormBuilder, private puntsService: PuntsService) {
+    this.markersArr = this.puntsService.markersArray;
 
     this.markerForm = this.fb.group({
       inputNom: "",
@@ -56,7 +56,7 @@ export class PuntsComponent implements OnInit {
       fav: formValue.inputFav
     }
 
-    this.mainService.addMarker(newPunt);
+    this.puntsService.addMarker(newPunt);
 
     //reset form
     this.markerForm.reset;
@@ -65,7 +65,7 @@ export class PuntsComponent implements OnInit {
   }
 
   deleteAllMarkers() {
-    this.mainService.deleteAllMarkers();
+    this.puntsService.deleteAllMarkers();
   }
 
   emitCenterImg(lat:number, lng: number) {
@@ -73,11 +73,11 @@ export class PuntsComponent implements OnInit {
   }
 
   deleteMarker(markerName: string) {
-    this.mainService.deleteMarkerAndReload(markerName);
+    this.puntsService.deleteMarkerAndReload(markerName);
   }
 
   changeFav(marker:Punt, val: boolean) {
-    this.mainService.changeFav(marker, val);
+    this.puntsService.changeFav(marker, val);
   }
 
 }

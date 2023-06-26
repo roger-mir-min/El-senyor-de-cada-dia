@@ -3,7 +3,7 @@ import { Map, marker, polyline, tileLayer } from 'leaflet';
 import { datasetPuntsArray } from 'src/assets/data/punts';
 import { datasetRutesArray } from 'src/assets/data/rutes';
 import { Coords, Punt } from 'src/shared/models/interfaces';
-import { MainService } from 'src/shared/services/main.service';
+import { PuntsService } from 'src/punts/services/punts.service';
 import { RutesService } from '../services/rutes.service';
 import { Ruta } from '../../shared/models/interfaces';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';

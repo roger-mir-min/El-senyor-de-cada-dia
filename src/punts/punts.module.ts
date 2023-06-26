@@ -6,6 +6,7 @@ import { ListComponent } from './components/list/list.component';
 import { Map } from 'leaflet';
 import { MapComponent } from './components/map/map.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { PuntsService } from './services/punts.service';
 
 @NgModule({
   imports: [
@@ -17,6 +18,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     PuntsComponent,
     ListComponent,
     MapComponent
+  ],
+  providers: [
+    PuntsService
   ]
 })
 export class PuntsModule { }

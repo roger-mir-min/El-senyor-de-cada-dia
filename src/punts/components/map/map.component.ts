@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnInit, ViewChild, Output, effect } from '@ang
 import { Map, marker, tileLayer } from 'leaflet';
 import { datasetPuntsArray } from 'src/assets/data/punts';
 import { Punt } from 'src/shared/models/interfaces';
-import { MainService } from 'src/shared/services/main.service';
+import { PuntsService } from 'src/punts/services/punts.service';
 
 @Component({
   selector: 'app-map',
@@ -17,14 +17,14 @@ export class MapComponent implements OnInit {
 
   map!: Map;
 
-  markersArr = this.mainService.markersArray;
+  markersArr = this.puntsService.markersArray;
   @Output() coordEmitter = new EventEmitter<{lat:number, lng:number}>();
 
   //INPUT VARIABLES
   currentLat: number = 0;
   currentLon: number = 0;
 
-  constructor(private mainService: MainService) {
+  constructor(private puntsService: PuntsService) {
   }
 
   ngOnInit() {
@@ -45,10 +45,7 @@ export class MapComponent implements OnInit {
     }).addTo(this.map);
 
     //MARKERS
-    this.markersArr().map(mark => {
-      const markerItem = marker([mark.lat, mark.lng], { draggable: true }).addTo(this.map).bindPopup(`${mark.name}`);
-      // markerItem.on('move', () => { map.removeLayer(markerItem) });
-    });
+    this.addMarkersArrToMap();
 
     //EVENT
     this.map.on('click', e => {
@@ -58,7 +55,7 @@ export class MapComponent implements OnInit {
 
     //ADD MARKER
     //Quan canvia llista de punts de mainService, es crea nou marcador
-    this.mainService.createMarker$.subscribe(res => {
+    this.puntsService.createMarker$.subscribe(res => {
       if (res) {
         let newMarker = marker([res!.lat, res!.lng], { draggable: true }).addTo(this.map)
           .bindPopup(`<h1>Info del nou punt</h1>
@@ -70,13 +67,18 @@ export class MapComponent implements OnInit {
     });
   }
 
+  //EFfect: when markersarr is updated, map is updated
   reloadAfterMarkersArrUpdate = effect(() => {
-  console.log(this.markersArr());
-      this.markersArr().map(mark => {
+  console.log("Update map with new markers: "+this.markersArr());
+    this.addMarkersArrToMap();
+  });
+  
+  addMarkersArrToMap() {
+          this.markersArr().map(mark => {
       const markerItem = marker([mark.lat, mark.lng], { draggable: true }).addTo(this.map).bindPopup(`${mark.name}`);
       // markerItem.on('move', () => { map.removeLayer(markerItem) });
     });
-});
+  }
 
   //when clicking on a place card, scroll to top (where map component is)
   //and center map into the card coordenates
