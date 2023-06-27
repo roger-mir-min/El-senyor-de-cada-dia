@@ -33,6 +33,7 @@ export class PuntsService {
         localStorage.removeItem('elsenyor-punts');//no sé si cal, ara que getInitialvalues admet []
     }
 
+    //en realitat l'únic valor que es canvia és .fav
     changeFav(marker: Punt, val: boolean) { 
         this.deleteMarkerFromArr(marker.name); //potser puc esborrar això i a baix canviar?
         this.markersArray.mutate(arr=>arr.push({
@@ -41,7 +42,7 @@ export class PuntsService {
             lng: marker.lng,
             descripcio: marker.descripcio,
             default: marker.default,
-            fav: val //passem el nou estat de fav
+            fav: val
         }));
     }
 

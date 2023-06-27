@@ -7,6 +7,8 @@ import { PuntsService } from 'src/punts/services/punts.service';
 import { RutesService } from '../services/rutes.service';
 import { Ruta } from '../../shared/models/interfaces';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { addBaseLayerToMap, centerMap } from 'src/shared/utils/functions';
+import { baseMap } from 'src/shared/constants/constants';
 
 @Component({
   selector: 'app-map-rutes',
@@ -15,15 +17,9 @@ import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 })
 export class MapRutesComponent implements OnInit {
 
- //aquest component agafa l'array inicial i després hi va afegint marcadors
-  //però pròpiament markersArr no està en sincronia amb el servei
-  //podria posar en sincronia i fer funció que, en canviar (.next) array
-  //es refessin tots els marcadors? o millor: que s'afegissin els nous?
-
   map!: Map;
 
   rutesArray = signal<Ruta[]>([]);
-  @Output() coordEmitter = new EventEmitter<{ lat: number, lng: number }>();
   
   showArray = false;
   currentCoords: Coords[] = [];
@@ -58,10 +54,7 @@ export class MapRutesComponent implements OnInit {
     }
 
     this.rutesService.addRuta(newRuta);
-
-    //reset form
     this.rutaForm.reset;
-    //amaguem form
     this.showArray = false;
     
   }
@@ -72,16 +65,10 @@ export class MapRutesComponent implements OnInit {
 
   ngAfterViewInit() {
     //MAPA
-    //coordenades de Sabadell
-    this.map = new Map('map').setView([41.548508, 2.099677], 14);
-
-    //TILE
-    const tileUrl = "https://tile.thunderforest.com/atlas/{z}/{x}/{y}.png?apikey=cca52b11a2fb4067b0e182f6fe865ec3";
+    this.map = baseMap;
 
     //LAYER
-    tileLayer(tileUrl, {maxZoom: 18,
-	  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(this.map);
+    addBaseLayerToMap(this.map);
 
     //POLYLINE - ADD ROUTE a partir de l'array
     this.rutesArray().map(ruta => {
@@ -92,7 +79,6 @@ export class MapRutesComponent implements OnInit {
     this.map.on('click', e => {
       const lat = e.latlng.lat;
       const lng = e.latlng.lng;
-      console.log(lat, lng);
       if (this.showArray == true) {
         this.currentCoords.push({ lat: lat, lng: lng });
         let newMarker = marker([lat, lng]).addTo(this.map);
@@ -109,37 +95,39 @@ export class MapRutesComponent implements OnInit {
 
   getRandomColor() {
     const number = Math.random()*10;
-    if (number > 8) {
+    if (number > 9) {
       return 'blue'
-    } else if (number > 6) {
+    } else if (number > 8) {
+      return 'purple'
+    } else if (number > 7) {
       return 'red'
+    } else if (number > 6) {
+      return 'pink'
+    } else if (number > 5) {
+      return 'brown'
     } else if (number > 4) {
       return 'green'
+    } else if (number > 3) {
+      return 'black'
     } else if (number > 2) {
       return 'orange'
+    } else if (number > 2) {
+      return 'grey'
     } else {
       return 'yellow'
     }
   }
 
   centerMap(lat: number, lng: number) {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    this.map.setView([lat, lng], 17);
+    centerMap(lat, lng, this.map);
   }
-
-  //when clicking on a place card, scroll to top (where map component is)
-  //and center map into the card coordenates
-  // centerMap2(lat1: number, lng1: number, lat2: number, lng2: number) {
-  //   window.scrollTo({ top: 0, behavior: 'smooth' });
-  //   this.map.setView([(lat1+lat2)/2, (lng1+lng2)/2], 15);
-  // }
 
   enableAddPuntsOfRutaArray() {
     this.showArray = true;
   }
 
   deleteRuta(rutaName: string) {
-    this.rutesService.deleteRutaAndReload(rutaName);
+    this.rutesService.deleteRutaFromArr(rutaName);
   }
 
   deleteAllRutes() {
@@ -149,7 +137,5 @@ export class MapRutesComponent implements OnInit {
   changeFav(ruta:Ruta, val: boolean) {
   this.rutesService.changeFav(ruta, val);
   }
-
-  
 
 }

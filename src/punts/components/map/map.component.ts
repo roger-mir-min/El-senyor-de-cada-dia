@@ -1,6 +1,8 @@
 import { Component, EventEmitter, OnInit, Output, effect } from '@angular/core';
 import { Map, marker, tileLayer } from 'leaflet';
 import { PuntsService } from 'src/punts/services/punts.service';
+import { baseMap } from 'src/shared/constants/constants';
+import { addBaseLayerToMap, centerMap } from 'src/shared/utils/functions';
 
 @Component({
   selector: 'app-map',
@@ -10,7 +12,6 @@ import { PuntsService } from 'src/punts/services/punts.service';
 export class MapComponent implements OnInit {
 
   map!: Map;
-  tileUrl = "https://tile.thunderforest.com/atlas/{z}/{x}/{y}.png?apikey=cca52b11a2fb4067b0e182f6fe865ec3";
 
   markersArr = this.puntsService.markersArray;
   @Output() coordEmitter = new EventEmitter<{lat:number, lng:number}>();
@@ -28,11 +29,10 @@ export class MapComponent implements OnInit {
 
   ngAfterViewInit() {
     //MAPA
-    //coordenades de Sabadell
-    this.map = new Map('map').setView([41.548508, 2.099677], 14);
+    this.map = baseMap;
 
     //LAYER
-    this.addBaseLayerToMap();
+    addBaseLayerToMap(this.map);
 
     //MARKERS
     this.addMarkersArrToMap();
@@ -44,17 +44,11 @@ export class MapComponent implements OnInit {
 
   }
 
-  addBaseLayerToMap() {
-    tileLayer(this.tileUrl, {maxZoom: 18,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(this.map);
-  }
-
   //When markersArr is updated, map is updated
   resetMapAfterMarkersArrUpdate = effect(() => {
     console.log("Update map with new markers: " + this.markersArr());
     this.map.eachLayer(layer => { this.map.removeLayer(layer) });
-    this.addBaseLayerToMap();
+    addBaseLayerToMap(this.map);
     this.addMarkersArrToMap();
   });
   
@@ -75,8 +69,7 @@ export class MapComponent implements OnInit {
   //when clicking on a place card, scroll to top (where map component is)
   //and center map into the card coordenates
   centerMap(lat: number, lng: number) {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    this.map.setView([lat, lng], 17);
+    centerMap(lat, lng, this.map);
   }
 
 }
