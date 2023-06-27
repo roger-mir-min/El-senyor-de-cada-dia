@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Punt, Ruta } from 'src/shared/models/interfaces';
 
 @Component({
   selector: 'app-card-collection',
@@ -7,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CardCollectionComponent implements OnInit {
 
+  @Input() data!: Punt|Ruta;
+
   constructor() { }
 
   ngOnInit() {
   }
+
+
+  
 
 }

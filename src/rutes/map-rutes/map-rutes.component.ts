@@ -40,10 +40,12 @@ export class MapRutesComponent implements OnInit {
 
     //When rutesArray is updated, map is updated
   resetMapAfterRutesArrayUpdate = effect(() => {
-    console.log("Update map with new markers: " + this.rutesArray());
-    this.map.eachLayer(layer => { this.map.removeLayer(layer) });
-    addBaseLayerToMap(this.map);
-    this.addRutesToMap();
+    if (this.map) {
+      console.log("Update map with new markers: " + this.rutesArray());
+      this.map.eachLayer(layer => { this.map.removeLayer(layer) });
+      addBaseLayerToMap(this.map);
+      this.addRutesToMap();
+    }
   });
 
   submitForm() {

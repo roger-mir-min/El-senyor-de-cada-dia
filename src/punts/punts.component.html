@@ -8,8 +8,7 @@
         Clica el botó "Crea el punt" i veuràs com s'afegeix un punt al mapa i com apareix la targeta del nou punt 
         a la col·lecció de baix. Les dues primeres targetes hi són per defecte, les pots eliminar.</div>
 
-    <!--MAP-->
-    <app-map class="mb-3" (coordEmitter)="openNewPointInput($event)"></app-map>
+    <app-map class="mb-3" (coordEmitter)="openNewPointInput($event)" (highlightEmitter)="highlightCard($event)"></app-map>
 
     <form *ngIf="showForm" class="text-crimson my-4" [formGroup]="markerForm" (ngSubmit)="submitForm()">
         <div>
@@ -37,10 +36,10 @@
         <h3 class="text-crimson">Col·lecció de punts guardats</h3>
         <div class="row g-0" style="margin: 0 -16px 0 -16px">
         <!-- <ng-container *ngIf="markersArr!=true"> -->
-            <ng-container *ngFor="let marker of markersArr()">
+            <ng-container *ngFor="let marker of markersArr(); let i = index">
                 
                     <div class="col-12 col-sm-6 col-md-4 col-lg-3 p-3">
-                        <div class="card text-center h-100" style="position:relative">
+                        <div [id]="'card-' + i" class="card text-center h-100" style="position:relative">
                             <!-- <app-mini-map [lat]="marker.lat" [lng]="marker.lng"></app-mini-map> -->
                                 <img (click)="emitCenterImg(marker.lat, marker.lng)" class="cursor-pointer" [src]="'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/pin-s('+ marker.lng + ',' + marker.lat + ')/' + marker.lng + ',' + marker.lat + ',14/500x300?access_token=pk.eyJ1Ijoicm9nZXItbWlyLW1pbiIsImEiOiJjbGoxbmR5cmgwc2EzM25veG12MmpsMzFsIn0._AGFhRr_UiAPltvxQ2ztiQ'" alt="mapet">
                             <div class="card-body">

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, signal } from '@angular/core';
+import { Component, OnInit, ViewChild, signal, Renderer2, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Coords, Punt } from 'src/shared/models/interfaces';
 import { PuntsService } from './services/punts.service';
@@ -17,7 +17,8 @@ export class PuntsComponent implements OnInit {
   showForm = false;
   markerForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private puntsService: PuntsService) {
+  constructor(private fb: FormBuilder, private puntsService: PuntsService,
+  private renderer: Renderer2, private el: ElementRef) {
     this.markersArr = this.puntsService.markersArray;
 
     this.markerForm = this.fb.group({
@@ -26,6 +27,8 @@ export class PuntsComponent implements OnInit {
       inputDescripcio: "",
       inputFav: false
     });
+
+    
   }
 
   ngOnInit() {
@@ -33,9 +36,7 @@ export class PuntsComponent implements OnInit {
   }
 
   openNewPointInput(e:any) {
-    console.log("Objecte rebut de map a punts: " + e.target);
     this.currentCoords = { ...e };
-    console.log("current coords: " + this.currentCoords);
     this.showForm = true;
   }
 
@@ -71,6 +72,23 @@ export class PuntsComponent implements OnInit {
 
   changeFav(marker:Punt, val: boolean) {
     this.puntsService.changeFav(marker, val);
+  }
+
+  highlightedCard: any;
+
+  //refactoritzar en una funció?
+  //falta tipar
+  highlightCard(e:{coords:Coords, highlight:boolean}) {
+    this.markersArr().forEach((marker, i) => {
+      if (marker.lat == e.coords.lat && marker.lng == e.coords.lng) {
+        this.highlightedCard = this.el.nativeElement.querySelector(`#card-${i}`);
+        if (e.highlight == true) {
+          this.renderer.setStyle(this.highlightedCard, 'border', '1px solid black');
+        } else {
+          this.renderer.setStyle(this.highlightedCard, 'border', 'none');
+        }
+      }
+    });
   }
 
 }
