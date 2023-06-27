@@ -70,7 +70,7 @@ export class PuntsComponent implements OnInit {
   }
 
   deleteMarker(markerName: string) {
-    this.puntsService.deleteMarkerAndReload(markerName);
+    this.puntsService.deleteMarkerFromArr(markerName);
   }
 
   changeFav(marker:Punt, val: boolean) {

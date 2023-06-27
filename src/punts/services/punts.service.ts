@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, effect, signal } from '@angular/core';
 import { Punt } from 'src/shared/models/interfaces';
 import { datasetPuntsArray } from 'src/assets/data/punts';
 
@@ -9,12 +9,11 @@ export class PuntsService {
 
     constructor() {
         this.markersArray.set(this.getInitialArray());
+        effect(()=>{localStorage.setItem('elsenyor-array', JSON.stringify(this.markersArray()));})
     }
     
-    //get localStorage or hard-coded dataSet
     getInitialArray(): Punt[] {
-        if (localStorage.getItem('elsenyor-array')) {
-            console.log("L'array de localStorage: " + JSON.parse(localStorage.getItem('elsenyor-array')!));
+        if (localStorage.getItem('elsenyor-array') && JSON.parse(localStorage.getItem('elsenyor-array')!).length>0) {
             return JSON.parse(localStorage.getItem('elsenyor-array')!);
         } else {
             return datasetPuntsArray;
@@ -22,30 +21,20 @@ export class PuntsService {
     }
 
     addMarkerToArr(marker: Punt) {
-        //push new point to array
         this.markersArray.mutate(arr=>arr.push(marker));
-        //store new point in localStorage
-        localStorage.setItem('elsenyor-array', JSON.stringify(this.markersArray()));
-
-        console.log("Ara markersArray és: " + this.markersArray());
     }
 
     deleteMarkerFromArr(markerName: string) {
         this.markersArray.update(arr=>[...arr.filter(obj => obj.name !== markerName)]);
     }
-    
-    deleteMarkerAndReload(markerName: string) {
-        this.deleteMarkerFromArr(markerName);
-        localStorage.setItem('elsenyor-array', JSON.stringify(this.markersArray()));
-    }
 
     deleteAllMarkers() {
         this.markersArray.update(arr => []);
-        localStorage.removeItem('elsenyor-array');
+        localStorage.removeItem('elsenyor-array');//no sé si cal, ara que getInitialvalues admet []
     }
 
-    changeFav(marker: Punt, val: boolean) {
-        this.deleteMarkerFromArr(marker.name);
+    changeFav(marker: Punt, val: boolean) { 
+        this.deleteMarkerFromArr(marker.name); //potser puc esborrar això i a baix canviar?
         this.markersArray.mutate(arr=>arr.push({
             name: marker.name,
             lat: marker.lat,
@@ -54,7 +43,6 @@ export class PuntsService {
             default: marker.default,
             fav: val //passem el nou estat de fav
         }));
-        localStorage.setItem('elsenyor-array', JSON.stringify(this.markersArray()));
     }
 
 }
