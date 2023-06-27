@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output, effect } from '@angular/core';
 import { Map, marker, tileLayer } from 'leaflet';
 import { PuntsService } from 'src/punts/services/punts.service';
-import { baseMap } from 'src/shared/constants/constants';
+import { createBaseMap } from 'src/shared/utils/functions';
 import { addBaseLayerToMap, centerMap } from 'src/shared/utils/functions';
 
 @Component({
@@ -29,7 +29,8 @@ export class MapComponent implements OnInit {
 
   ngAfterViewInit() {
     //MAPA
-    this.map = baseMap;
+    //coordenades de Sabadell
+    this.map = createBaseMap('map');
 
     //LAYER
     addBaseLayerToMap(this.map);
@@ -46,10 +47,11 @@ export class MapComponent implements OnInit {
 
   //When markersArr is updated, map is updated
   resetMapAfterMarkersArrUpdate = effect(() => {
-    console.log("Update map with new markers: " + this.markersArr());
-    this.map.eachLayer(layer => { this.map.removeLayer(layer) });
-    addBaseLayerToMap(this.map);
-    this.addMarkersArrToMap();
+    if (this.map) {
+      this.map.eachLayer(layer => { this.map.removeLayer(layer) });
+      addBaseLayerToMap(this.map);
+      this.addMarkersArrToMap();
+    }
   });
   
   addMarkersArrToMap() {

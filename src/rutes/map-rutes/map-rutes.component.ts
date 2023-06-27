@@ -1,14 +1,11 @@
-import { Component, EventEmitter, OnInit, ViewChild, Output, signal } from '@angular/core';
-import { Map, marker, polyline, tileLayer } from 'leaflet';
-import { datasetPuntsArray } from 'src/assets/data/punts';
-import { datasetRutesArray } from 'src/assets/data/rutes';
-import { Coords, Punt } from 'src/shared/models/interfaces';
-import { PuntsService } from 'src/punts/services/punts.service';
+import { Component, OnInit, effect, signal } from '@angular/core';
+import { Map, marker, polyline } from 'leaflet';
+import { Coords } from 'src/shared/models/interfaces';
 import { RutesService } from '../services/rutes.service';
 import { Ruta } from '../../shared/models/interfaces';
-import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { addBaseLayerToMap, centerMap } from 'src/shared/utils/functions';
-import { baseMap } from 'src/shared/constants/constants';
+import { createBaseMap } from 'src/shared/utils/functions';
 
 @Component({
   selector: 'app-map-rutes',
@@ -22,13 +19,13 @@ export class MapRutesComponent implements OnInit {
   rutesArray = signal<Ruta[]>([]);
   
   showArray = false;
+  rutaForm: FormGroup;
   currentCoords: Coords[] = [];
 
   //INPUT VARIABLES
-  currentLat: number = 0;
-  currentLon: number = 0;
+  // currentLat: number = 0;
+  // currentLon: number = 0;
 
-    rutaForm: FormGroup;
 
   constructor(private fb: FormBuilder, private rutesService: RutesService) {
     this.rutesArray = this.rutesService.rutesArray;
@@ -40,6 +37,14 @@ export class MapRutesComponent implements OnInit {
       inputFav: false
     });
   }
+
+    //When rutesArray is updated, map is updated
+  resetMapAfterRutesArrayUpdate = effect(() => {
+    console.log("Update map with new markers: " + this.rutesArray());
+    this.map.eachLayer(layer => { this.map.removeLayer(layer) });
+    addBaseLayerToMap(this.map);
+    this.addRutesToMap();
+  });
 
   submitForm() {
     const formValue = this.rutaForm.value;
@@ -65,15 +70,13 @@ export class MapRutesComponent implements OnInit {
 
   ngAfterViewInit() {
     //MAPA
-    this.map = baseMap;
+    this.map = createBaseMap('map');
 
     //LAYER
     addBaseLayerToMap(this.map);
 
     //POLYLINE - ADD ROUTE a partir de l'array
-    this.rutesArray().map(ruta => {
-      const rutaItem = polyline(ruta.coords, { color: this.getRandomColor() }).addTo(this.map);
-    });
+    this.addRutesToMap();
 
     //EVENT: ON CLICK, ADD PUNTS --IF SHOWARRAY IS TRUE
     this.map.on('click', e => {
@@ -91,6 +94,28 @@ export class MapRutesComponent implements OnInit {
       }
     });
 
+  }
+
+  addRutesToMap() {
+    this.rutesArray().map(ruta => {
+      const rutaItem = polyline(ruta.coords, { color: this.getRandomColor() }).addTo(this.map);
+    });
+  }
+
+  enableAddPuntsOfRutaArray() {
+    this.showArray = true;
+  }
+
+  deleteRuta(rutaName: string) {
+    this.rutesService.deleteRutaFromArr(rutaName);
+  }
+
+  deleteAllRutes() {
+    this.rutesService.deleteAllRutes();
+  }
+
+  changeFav(ruta:Ruta, val: boolean) {
+  this.rutesService.changeFav(ruta, val);
   }
 
   getRandomColor() {
@@ -120,22 +145,6 @@ export class MapRutesComponent implements OnInit {
 
   centerMap(lat: number, lng: number) {
     centerMap(lat, lng, this.map);
-  }
-
-  enableAddPuntsOfRutaArray() {
-    this.showArray = true;
-  }
-
-  deleteRuta(rutaName: string) {
-    this.rutesService.deleteRutaFromArr(rutaName);
-  }
-
-  deleteAllRutes() {
-    this.rutesService.deleteAllRutes();
-  }
-
-  changeFav(ruta:Ruta, val: boolean) {
-  this.rutesService.changeFav(ruta, val);
   }
 
 }
