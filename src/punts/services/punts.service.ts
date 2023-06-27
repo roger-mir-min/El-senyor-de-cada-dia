@@ -9,12 +9,12 @@ export class PuntsService {
 
     constructor() {
         this.markersArray.set(this.getInitialArray());
-        effect(()=>{localStorage.setItem('elsenyor-array', JSON.stringify(this.markersArray()));})
+        effect(()=>{localStorage.setItem('elsenyor-punts', JSON.stringify(this.markersArray()));})
     }
     
     getInitialArray(): Punt[] {
-        if (localStorage.getItem('elsenyor-array') && JSON.parse(localStorage.getItem('elsenyor-array')!).length>0) {
-            return JSON.parse(localStorage.getItem('elsenyor-array')!);
+        if (localStorage.getItem('elsenyor-punts') && JSON.parse(localStorage.getItem('elsenyor-punts')!).length>0) {
+            return JSON.parse(localStorage.getItem('elsenyor-punts')!);
         } else {
             return datasetPuntsArray;
         }
@@ -30,7 +30,7 @@ export class PuntsService {
 
     deleteAllMarkers() {
         this.markersArray.update(arr => []);
-        localStorage.removeItem('elsenyor-array');//no sé si cal, ara que getInitialvalues admet []
+        localStorage.removeItem('elsenyor-punts');//no sé si cal, ara que getInitialvalues admet []
     }
 
     changeFav(marker: Punt, val: boolean) { 

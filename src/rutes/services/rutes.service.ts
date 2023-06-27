@@ -12,7 +12,7 @@ export class RutesService {
     }
 
     getInitialArray(): Ruta[] {
-        if (localStorage.getItem('elsenyor-rutes')) {
+        if (localStorage.getItem('elsenyor-rutes') && JSON.parse(localStorage.getItem('elsenyor-rutes')!).length>0) {
             console.log(localStorage.getItem('elsenyor-rutes')!);
             return JSON.parse(localStorage.getItem('elsenyor-rutes')!);
         } else {
@@ -52,7 +52,7 @@ export class RutesService {
             default: ruta.default,
             fav: val //passem el nou estat de fav
         }));
-        localStorage.setItem('elsenyor-array', JSON.stringify(this.rutesArray()));
+        localStorage.setItem('elsenyor-rutes', JSON.stringify(this.rutesArray()));
         location.reload();
     }
 

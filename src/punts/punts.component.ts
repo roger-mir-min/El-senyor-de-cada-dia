@@ -1,10 +1,7 @@
 import { Component, OnInit, ViewChild, signal } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
-import { Map, marker, tileLayer } from 'leaflet';
-import { datasetPuntsArray } from 'src/assets/data/punts';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Coords, Punt } from 'src/shared/models/interfaces';
 import { PuntsService } from './services/punts.service';
-import { Observable } from 'rxjs';
 import { MapComponent } from './components/map/map.component';
 
 @Component({
@@ -39,7 +36,6 @@ export class PuntsComponent implements OnInit {
     console.log("Objecte rebut de map a punts: " + e.target);
     this.currentCoords = { ...e };
     console.log("current coords: " + this.currentCoords);
-    //mostrem form
     this.showForm = true;
   }
 
