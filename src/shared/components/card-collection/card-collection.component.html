@@ -1,0 +1,22 @@
+<!-- <div class="col-12 col-sm-6 col-md-4 col-lg-3 p-3">
+                        <div class="card text-center h-100" style="position:relative">
+                                <img (click)="emitCenterImg(data.lat, data.lng)" class="cursor-pointer" [src]="'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/pin-s('+ data.lng + ',' + data.lat + ')/' + data.lng + ',' + data.lat + ',14/500x300?access_token=pk.eyJ1Ijoicm9nZXItbWlyLW1pbiIsImEiOiJjbGoxbmR5cmgwc2EzM25veG12MmpsMzFsIn0._AGFhRr_UiAPltvxQ2ztiQ'" alt="mapet">
+                            <div class="card-body">
+                            <div class="">
+                                <b>{{data.name}}</b>
+                            </div>
+                            <div class="text-crimson">
+                                Descripció: {{data.descripcio}}
+                            </div>
+                            <div class="text-crimson">
+                                Puntuació: {{data.puntuacio}}
+                            </div>
+                            </div>
+                            <small *ngIf="data.default == true" style="position:absolute; top:12px; right:12px">Default point</small>
+                            <i *ngIf="data.fav==true && data.default == false" (click)="changeFav(data, false)" class="fa-solid fa-star" style="position:absolute; top:12px; right:12px"></i>
+                            <i *ngIf="data.fav==false && data.default == false" (click)="changeFav(data, true)" class="fa-regular fa-star" style="position:absolute; top:12px; right:12px"></i>
+                            <div class="card-footer">
+                                <button class="btn btn-outline-danger text-crimson" (click)="deleteMarker(data.name)">Elimina</button>
+                            </div>
+                        </div>
+                    </div> -->
