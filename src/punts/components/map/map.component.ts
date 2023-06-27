@@ -57,13 +57,13 @@ export class MapComponent implements OnInit {
   addMarkersArrToMap() {
     this.markersArr().map(mark => {
       const markerItem = marker([mark.lat, mark.lng], { draggable: true }).addTo(this.map)
-        .bindPopup(`<div class="text-crimson position-relative"></div><h2>Info del nou punt</h2>
-        <p>Nom: ${mark!.name}</p>
-        <p>Puntuació: ${mark!.puntuacio}</p>
-        <p>Descripció: ${mark!.descripcio}</p>
-        <i *ngIf="marker.fav==true && marker.default == false" class="fa-solid fa-star" style="position:absolute; 
-        bottom:16px; right:12px"></i>
-        <button (click)="deleteMarker(e)" class="btn btn-primary text-crimson">Eliminar marcador</button>
+        .bindPopup(`<div class="text-crimson position-relative">
+          <h2 class="text-handle"><b>${mark!.name}</b></h2>
+          <p><b>Puntuació</b>: ${mark!.puntuacio}</p>
+          <p><b>Descripció</b>: ${mark!.descripcio}</p>
+          <i *ngIf="marker.fav==true && marker.default == false" class="fa-solid fa-star" style="position:absolute; 
+          bottom:16px; right:12px"></i>
+          <button (click)="deleteMarker(e)" class="btn btn-outline-dark text-crimson">Eliminar marcador</button>
         </div>`);
   });
   }
