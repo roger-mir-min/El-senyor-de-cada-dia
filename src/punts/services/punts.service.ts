@@ -9,7 +9,9 @@ export class PuntsService {
 
     constructor() {
         this.markersArray.set(this.getInitialArray());
-        effect(()=>{localStorage.setItem('elsenyor-punts', JSON.stringify(this.markersArray()));})
+        effect(() => {
+            localStorage.setItem('elsenyor-punts', JSON.stringify(this.markersArray()));
+        });
     }
     
     getInitialArray(): Punt[] {

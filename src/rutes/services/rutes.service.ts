@@ -9,7 +9,10 @@ export class RutesService {
 
     constructor() {
         this.rutesArray.set(this.getInitialArray());
-        effect(()=>{localStorage.setItem('elsenyor-rutes', JSON.stringify(this.rutesArray()));})
+        effect(() => {
+            localStorage.setItem('elsenyor-rutes', JSON.stringify(this.rutesArray()));
+            console.log("s'ha guardat localstorage");
+        })
     }
 
     getInitialArray(): Ruta[] {

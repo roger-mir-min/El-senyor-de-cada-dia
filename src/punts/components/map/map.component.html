@@ -1,1 +1,4 @@
 <div id="map"></div>
+<ng-container *ngFor="let marker of markersArr(); let i = index">
+    <div>{{marker.lat}}</div>
+</ng-container>

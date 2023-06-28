@@ -30,7 +30,7 @@ export class MapRutesComponent implements OnInit {
   constructor(private fb: FormBuilder, private rutesService: RutesService) {
     this.rutesArray = this.rutesService.rutesArray;
 
-      this.rutaForm = this.fb.group({
+    this.rutaForm = this.fb.group({
       inputNom: "",
       inputPuntuacio: 0,
       inputDescripcio: "",
@@ -40,8 +40,7 @@ export class MapRutesComponent implements OnInit {
 
     //When rutesArray is updated, map is updated
   resetMapAfterRutesArrayUpdate = effect(() => {
-    if (this.map) {
-      console.log("Update map with new markers: " + this.rutesArray());
+    if (this.rutesArray() && this.map) {
       this.map.eachLayer(layer => { this.map.removeLayer(layer) });
       addBaseLayerToMap(this.map);
       this.addRutesToMap();

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, effect } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, effect, signal } from '@angular/core';
 import { LatLngExpression, Map, marker, tileLayer } from 'leaflet';
 import { PuntsService } from 'src/punts/services/punts.service';
 import { Coords, Punt } from 'src/shared/models/interfaces';
@@ -14,7 +14,7 @@ export class MapComponent implements OnInit {
 
   map!: Map;
 
-  markersArr = this.puntsService.markersArray;
+  markersArr = signal<Punt[]>([]);
   @Output() coordEmitter = new EventEmitter<Coords>();
   @Output() highlightEmitter = new EventEmitter<{ coords: Coords, highlight: boolean }>();
 
@@ -23,14 +23,7 @@ export class MapComponent implements OnInit {
   currentLon: number = 0;
 
   constructor(private puntsService: PuntsService) {
-    effect(() => {
-    if (this.map) {
-      console.log("Markers array update: " + this.markersArr()); //aquesta línia cal per activar l'effect
-      this.map.eachLayer(layer => { this.map.removeLayer(layer) });
-      addBaseLayerToMap(this.map);
-      this.addMarkersArrToMap();
-    }
-  });
+    this.markersArr = this.puntsService.markersArray;
   }
 
   ngOnInit() {
@@ -55,15 +48,14 @@ export class MapComponent implements OnInit {
 
   }
 
-  //When markersArr is updated, map is updated
-  // resetMapAfterMarkersArrUpdate = effect(() => {
-  //   if (this.map) {
-  //     console.log("Markers array update: " + this.markersArr()); //aquesta línia cal per activar l'effect
-  //     this.map.eachLayer(layer => { this.map.removeLayer(layer) });
-  //     addBaseLayerToMap(this.map);
-  //     this.addMarkersArrToMap();
-  //   }
-  // });
+ 
+  resetMapAfterMarkersArrUpdate = effect(() => {
+    if (this.markersArr() && this.map) {
+      this.map.eachLayer(layer => { this.map.removeLayer(layer) });
+      addBaseLayerToMap(this.map);
+      this.addMarkersArrToMap();
+    }
+  });
   
   addMarkersArrToMap() {
     this.markersArr().map(mark => {
