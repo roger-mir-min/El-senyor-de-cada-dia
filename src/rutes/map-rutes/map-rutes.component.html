@@ -2,74 +2,159 @@
 
 <!--MAP SECTION-->
 <section class="mb-5">
-    <h3 class="text-crimson">Mapa de rutes guardades</h3>
-    <p class="text-crimson">Clica el botó "Afegeix una ruta", i a continuació clica al mapa als punts de la ruta, 
-        per ordre. Posa un punt per cada canvi de direcció de la ruta. Completa la informació de la ruta 
-        que apareix sota el mapa i clica "Crea la ruta". Veuràs que es dibuixa la ruta al mapa i que s'afegeix la targeta
-        de la nova ruta a la col·lecció de baix. Les dues primeres targetes hi són per defecte, les pots eliminar.
-    </p>
-<div id="map" class="mb-3"></div>
-<button *ngIf="showArray==false" (click)="enableAddPuntsOfRutaArray()" class="btn btn-dark">Afegeix una ruta</button>
-<div *ngIf="showArray==true" class="my-4 text-crimson">
-  <div class="fw-bold">Punts afegits (mínim 2):</div>
-  <ng-container *ngFor="let punt of currentCoords">
-    <div>{{punt.lat}}, {{punt.lng}}</div>
-  </ng-container>
+  <h3 class="text-crimson">Mapa de rutes guardades</h3>
+  <p class="text-crimson">
+    Clica el botó "Afegeix una ruta", i a continuació clica al mapa als punts de
+    la ruta, per ordre. Posa un punt per cada canvi de direcció de la ruta.
+    Completa la informació de la ruta que apareix sota el mapa i clica "Crea la
+    ruta". Veuràs que es dibuixa la ruta al mapa i que s'afegeix la targeta de
+    la nova ruta a la col·lecció de baix. Les dues primeres targetes hi són per
+    defecte, les pots eliminar.
+  </p>
+  <div id="map" class="mb-3"></div>
+  <button
+    *ngIf="showArray == false"
+    (click)="enableAddPuntsOfRutaArray()"
+    class="btn btn-dark"
+  >
+    Afegeix una ruta
+  </button>
+  <div *ngIf="showArray == true" class="my-4 text-crimson">
+    <div class="fw-bold">Punts afegits (mínim 2):</div>
+    <ng-container *ngFor="let punt of currentCoords">
+      <div>{{ punt.lat }}, {{ punt.lng }}</div>
+    </ng-container>
 
-      <form [formGroup]="rutaForm" (ngSubmit)="submitForm()">
-        <div>
-            <label for="nom" class="me-2">Nom</label>
-            <input id="nom" type="text" class="me-2 me-md-3 mb-3" placeholder="nom" formControlName="inputNom" 
-            [class.is-invalid] = "rutaForm.get('inputNom')!.invalid && rutaForm.get('inputNom')!.touched">
-        
-            <label for="puntuació" class="me-2">Puntuació</label>
-            <input id="puntuació" type="number" class="me-2 me-md-3 mb-3" formControlName="inputPuntuacio" 
-            [class.is-invalid] = "rutaForm.get('inputPuntuacio')!.invalid && rutaForm.get('inputPuntuacio')!.touched">
-        </div>
+    <form [formGroup]="rutaForm" (ngSubmit)="submitForm()">
+      <div>
+        <label for="nom" class="me-2">Nom</label>
+        <input
+          id="nom"
+          type="text"
+          class="me-2 me-md-3 mb-3"
+          placeholder="nom"
+          formControlName="inputNom"
+          [class.is-invalid]="
+            rutaForm.get('inputNom')!.invalid &&
+            rutaForm.get('inputNom')!.touched
+          "
+        />
 
-        <div>
-            <label for="descripció" class="me-2">Descripció</label>
-            <input id="descripció" tpye="text" class="me-2 me-md-3 mb-3" formControlName="inputDescripcio" 
-            [class.is-invalid] = "rutaForm.get('inputPuntuacio')!.invalid && rutaForm.get('inputPuntuacio')!.touched">
-        
-            <label for="fav" class="me-2">Favorit</label>
-            <input id="fav" type="checkbox" class="me-2 me-md-3 mb-3" formControlName="inputFav">
-        </div>
-        <button [disabled]="2>currentCoords.length" type="submit" class="btn btn-dark">Crea la ruta</button>
+        <label for="puntuació" class="me-2">Puntuació</label>
+        <input
+          id="puntuació"
+          type="number"
+          class="me-2 me-md-3 mb-3"
+          formControlName="inputPuntuacio"
+          [class.is-invalid]="
+            rutaForm.get('inputPuntuacio')!.invalid &&
+            rutaForm.get('inputPuntuacio')!.touched
+          "
+        />
+      </div>
+
+      <div>
+        <label for="descripció" class="me-2">Descripció</label>
+        <input
+          id="descripció"
+          tpye="text"
+          class="me-2 me-md-3 mb-3"
+          formControlName="inputDescripcio"
+          [class.is-invalid]="
+            rutaForm.get('inputPuntuacio')!.invalid &&
+            rutaForm.get('inputPuntuacio')!.touched
+          "
+        />
+
+        <label for="fav" class="me-2">Favorit</label>
+        <input
+          id="fav"
+          type="checkbox"
+          class="me-2 me-md-3 mb-3"
+          formControlName="inputFav"
+        />
+      </div>
+      <button
+        [disabled]="2 > currentCoords.length"
+        type="submit"
+        class="btn btn-dark"
+      >
+        Crea la ruta
+      </button>
     </form>
-</div>
+  </div>
 </section>
 
 <!--GALLERY SECTION-->
 <section>
-<div class="punts-wrapper">
-        <h3 class="text-crimson">Col·lecció de rutes guardades</h3>
-        <div class="row g-0" style="margin: 0 -16px 0 -16px">
-<ng-container *ngFor="let ruta of rutesArray()">
-   <div class="col-12 col-sm-6 col-md-4 col-lg-3 p-3">
-                        <div class="card text-center h-100" style="position:relative">
-                            <img (click)="centerMap(ruta.coords[0].lat, ruta.coords[0].lng)" class="cursor-pointer" [src]="'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/pin-s('+ ruta.coords[0].lng + ',' + ruta.coords[0].lat + ')/' + ruta.coords[0].lng + ',' + ruta.coords[0].lat + ',14/500x300?access_token=pk.eyJ1Ijoicm9nZXItbWlyLW1pbiIsImEiOiJjbGoxbmR5cmgwc2EzM25veG12MmpsMzFsIn0._AGFhRr_UiAPltvxQ2ztiQ'" alt="mapet">
-                            <div class="card-body">
-                                <div class="">
-                                    <b>{{ruta.name}}</b>
-                                </div>
-                                <div class="text-crimson">
-                                    <b>Descripció</b>: {{ruta.descripcio}}
-                                </div>
-                                <div class="text-crimson">
-                                    <b>Puntuació</b>: {{ruta.puntuacio}}
-                                </div>
-                            </div>
-                            <small *ngIf="ruta.default == true" style="position:absolute; top:12px; right:12px">Default point</small>
-                            <i *ngIf="ruta.fav==true && ruta.default == false" (click)="changeFav(ruta, false)" class="fa-solid fa-star" style="position:absolute; top:12px; right:12px"></i>
-                            <i *ngIf="ruta.fav==false && ruta.default == false" (click)="changeFav(ruta, true)" class="fa-regular fa-star" style="position:absolute; top:12px; right:12px"></i>
-                            <div class="card-footer">
-                                <button class="btn btn-outline-danger text-crimson" (click)="deleteRuta(ruta.name)">Elimina</button>
-                            </div>
-                        </div>
-                    </div>
-</ng-container>
-</div>
-<button class="btn btn-danger mx-auto mt-4 text-crimson" style="max-width:40%" (click)="deleteAllRutes()">Eliminar totes les rutes</button>
+  <div class="punts-wrapper">
+    <h3 class="text-crimson">Col·lecció de rutes guardades</h3>
+    <div class="row g-0" style="margin: 0 -16px 0 -16px">
+      <ng-container *ngFor="let ruta of rutesArray()">
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 p-3">
+          <div class="card text-center h-100" style="position: relative">
+            <img
+              (click)="centerMap(ruta.coords[0].lat, ruta.coords[0].lng)"
+              class="cursor-pointer"
+              [src]="
+                'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/pin-s(' +
+                ruta.coords[0].lng +
+                ',' +
+                ruta.coords[0].lat +
+                ')/' +
+                ruta.coords[0].lng +
+                ',' +
+                ruta.coords[0].lat +
+                ',14/500x300?access_token=pk.eyJ1Ijoicm9nZXItbWlyLW1pbiIsImEiOiJjbGoxbmR5cmgwc2EzM25veG12MmpsMzFsIn0._AGFhRr_UiAPltvxQ2ztiQ'
+              "
+              alt="mapet"
+            />
+            <div class="card-body">
+              <div class="">
+                <b>{{ ruta.name }}</b>
+              </div>
+              <div class="text-crimson">
+                <b>Descripció</b>: {{ ruta.descripcio }}
+              </div>
+              <div class="text-crimson">
+                <b>Puntuació</b>: {{ ruta.puntuacio }}
+              </div>
+            </div>
+            <small
+              *ngIf="ruta.default == true"
+              style="position: absolute; top: 12px; right: 12px"
+              >Default point</small
+            >
+            <i
+              *ngIf="ruta.fav == true && ruta.default == false"
+              (click)="changeFav(ruta, false)"
+              class="fa-solid fa-star"
+              style="position: absolute; top: 12px; right: 12px"
+            ></i>
+            <i
+              *ngIf="ruta.fav == false && ruta.default == false"
+              (click)="changeFav(ruta, true)"
+              class="fa-regular fa-star"
+              style="position: absolute; top: 12px; right: 12px"
+            ></i>
+            <div class="card-footer">
+              <button
+                class="btn btn-outline-danger text-crimson"
+                (click)="deleteRuta(ruta.name)"
+              >
+                Elimina
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
     </div>
-    </section>
+    <button
+      class="btn btn-danger mx-auto mt-4 text-crimson"
+      style="max-width: 40%"
+      (click)="deleteAllRutes()"
+    >
+      Eliminar totes les rutes
+    </button>
+  </div>
+</section>
