@@ -3,3 +3,9 @@ a{
     font-weight: bold;
     color: black;
 }
+
+@media screen and (max-width: 992px) {
+  .entrada {
+    font-size: 2em;
+  }
+}
