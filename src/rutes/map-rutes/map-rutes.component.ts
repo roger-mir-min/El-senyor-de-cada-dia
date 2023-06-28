@@ -1,4 +1,4 @@
-import { Component, OnInit, effect, signal } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2, effect, signal } from '@angular/core';
 import { Map, marker, polyline } from 'leaflet';
 import { Coords } from 'src/shared/models/interfaces';
 import { RutesService } from '../services/rutes.service';
@@ -27,7 +27,8 @@ export class MapRutesComponent implements OnInit {
   // currentLon: number = 0;
 
 
-  constructor(private fb: FormBuilder, private rutesService: RutesService) {
+  constructor(private fb: FormBuilder, private rutesService: RutesService,
+  private renderer: Renderer2, private el: ElementRef) {
     this.rutesArray = this.rutesService.rutesArray;
 
     this.rutaForm = this.fb.group({
@@ -99,7 +100,11 @@ export class MapRutesComponent implements OnInit {
 
   addRutesToMap() {
     this.rutesArray().map(ruta => {
-      const rutaItem = polyline(ruta.coords, { color: this.getRandomColor() }).addTo(this.map);
+      const rutaItem = polyline(ruta.coords, { color: this.getRandomColor() }).bindPopup(`${ruta.name}`).addTo(this.map);
+
+      rutaItem.on('click', () => rutaItem.openPopup());
+      rutaItem.on('popupopen', () => this.highlightCard({ selectedRuta:ruta, highlight: true}));
+      rutaItem.on('popupclose', () => this.highlightCard({ selectedRuta:ruta, highlight: false}));
     });
   }
 
@@ -117,6 +122,23 @@ export class MapRutesComponent implements OnInit {
 
   changeFav(ruta:Ruta, val: boolean) {
   this.rutesService.changeFav(ruta, val);
+  }
+
+  highlightedCard: any;
+
+    highlightCard(e:{selectedRuta:Ruta, highlight:boolean}) {
+    this.rutesArray().forEach((ruta, i) => {
+      if (e.selectedRuta.name == ruta.name
+        && e.selectedRuta.coords[0].lng == ruta.coords[0].lng 
+        && e.selectedRuta.coords[0].lat == ruta.coords[0].lat) {
+        this.highlightedCard = this.el.nativeElement.querySelector(`#card-${i}`);
+          if (e.highlight == true) {
+            this.renderer.setStyle(this.highlightedCard, 'border', '1px solid black');
+          } else {
+            this.renderer.setStyle(this.highlightedCard, 'border', 'none');
+          }
+      }
+    });
   }
 
   getRandomColor() {

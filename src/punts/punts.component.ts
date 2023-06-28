@@ -76,7 +76,6 @@ export class PuntsComponent implements OnInit {
 
   highlightedCard: any;
 
-  //refactoritzar en una funció?
   //falta tipar
   highlightCard(e:{coords:Coords, highlight:boolean}) {
     this.markersArr().forEach((marker, i) => {
