@@ -37,15 +37,10 @@ export class PuntsService {
 
     //en realitat l'únic valor que es canvia és .fav
     changeFav(marker: Punt, val: boolean) { 
-        this.deleteMarkerFromArr(marker.name); //potser puc esborrar això i a baix canviar?
-        this.markersArray.mutate(arr=>arr.push({
-            name: marker.name,
-            lat: marker.lat,
-            lng: marker.lng,
-            descripcio: marker.descripcio,
-            default: marker.default,
-            fav: val
-        }));
+        //guardo posició en variable
+        const index = this.markersArray().findIndex((mark: Punt) => mark.name == marker.name);
+         //potser puc esborrar això i a baix canviar?
+        this.markersArray.mutate(arr=>arr[index].fav = val);
     }
 
 }

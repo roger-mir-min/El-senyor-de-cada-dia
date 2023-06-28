@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, signal, Renderer2, ElementRef } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Coords, Punt } from 'src/shared/models/interfaces';
 import { PuntsService } from './services/punts.service';
 import { MapComponent } from './components/map/map.component';
@@ -22,9 +22,9 @@ export class PuntsComponent implements OnInit {
     this.markersArr = this.puntsService.markersArray;
 
     this.markerForm = this.fb.group({
-      inputNom: "",
-      inputPuntuacio: 0,
-      inputDescripcio: "",
+      inputNom: ["", [Validators.required]],
+      inputPuntuacio: [0, [Validators.required]],
+      inputDescripcio: ["", [Validators.required]],
       inputFav: false
     });
 
@@ -54,7 +54,7 @@ export class PuntsComponent implements OnInit {
     }
 
     this.puntsService.addMarkerToArr(newPunt);
-    this.markerForm.reset;
+    this.markerForm.reset();
     this.showForm = false;
   }
 

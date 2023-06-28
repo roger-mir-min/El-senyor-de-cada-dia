@@ -64,8 +64,6 @@ export class MapComponent implements OnInit {
           <h2 class="text-handle"><b>${mark!.name}</b></h2>
           <p><b>Puntuació</b>: ${mark!.puntuacio}</p>
           <p><b>Descripció</b>: ${mark!.descripcio}</p>
-          <i *ngIf="marker.fav==true && marker.default == false" class="fa-solid fa-star" style="position:absolute; 
-          bottom:16px; right:12px"></i>
           <button (click)="deleteMarker(e)" class="btn btn-outline-dark text-crimson">Eliminar marcador</button>
         </div>`);
       

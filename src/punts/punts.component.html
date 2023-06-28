@@ -1,72 +1,141 @@
 <!--MAP SECTION-->
-<!-- <ng-container *ngIf="true||(markersArr$|async) as markersArr"> -->
-    <h2 class="fw-bold">Els meus punts</h2>
+<h2 class="fw-bold">Els meus punts</h2>
 
-    <section class="mb-5">
-    <h3 class="text-crimson">Mapa de punts guardats</h3>
-    <div class="text-crimson">Clica el punt del mapa que vulguis afegir. A sota del mapa podràs completar la informació. 
-        Clica el botó "Crea el punt" i veuràs com s'afegeix un punt al mapa i com apareix la targeta del nou punt 
-        a la col·lecció de baix. Les dues primeres targetes hi són per defecte, les pots eliminar.</div>
+<section class="mb-5">
+  <h3 class="text-crimson">Mapa de punts guardats</h3>
+  <div class="text-crimson">
+    Clica el punt del mapa que vulguis afegir. A sota del mapa podràs completar
+    la informació. Clica el botó "Crea el punt" i veuràs com s'afegeix un punt
+    al mapa i com apareix la targeta del nou punt a la col·lecció de baix. Les
+    dues primeres targetes hi són per defecte, les pots eliminar.
+  </div>
 
-    <app-map class="mb-3" (coordEmitter)="openNewPointInput($event)" (highlightEmitter)="highlightCard($event)"></app-map>
+  <app-map
+    class="mb-3"
+    (coordEmitter)="openNewPointInput($event)"
+    (highlightEmitter)="highlightCard($event)"
+  ></app-map>
 
-    <form *ngIf="showForm" class="text-crimson my-4" [formGroup]="markerForm" (ngSubmit)="submitForm()">
-        <div>
-            <label for="nom" class="me-2">Nom: </label>
-            <input id="nom" type="text" class="me-2 me-md-3 mb-3" placeholder="nom" formControlName="inputNom">
+  <form
+    *ngIf="showForm"
+    class="text-crimson my-4"
+    [formGroup]="markerForm"
+    (ngSubmit)="submitForm()"
+  >
+    <div>
+      <label for="nom" class="me-2">Nom: </label>
+      <input
+        id="nom"
+        type="text"
+        class="me-2 me-md-3 mb-3"
+        placeholder="nom"
+        formControlName="inputNom"
+        [class.is-invalid] = "markerForm.get('inputNom')!.invalid && markerForm.get('inputNom')!.touched"
+      />
 
-            <label for="puntuació" class="me-2">Puntuació: </label>
-            <input id="puntuació" type="number" class="me-2 me-md-3 mb-3" formControlName="inputPuntuacio">
-        </div>
-        <div>
-            <label for="descripció" class="me-2">Descripció: </label>
-            <input id="descripció" tpye="text" class="me-2 me-md-3 mb-3" formControlName="inputDescripcio">
-            
-            <label for="fav" class="me-2">Favorit</label>
-            <input id="fav" type="checkbox" class="me-2 me-md-3 mb-3" formControlName="inputFav">
-        </div>
-        <button type="submit" class="btn btn-dark text-handle">Crea el punt</button>
-    </form>
+      <label for="puntuació" class="me-2">Puntuació: </label>
+      <input
+        id="puntuació"
+        type="number"
+        class="me-2 me-md-3 mb-3"
+        formControlName="inputPuntuacio"
+        [class.is-invalid] = "markerForm.get('inputPuntuacio')!.invalid && markerForm.get('inputPuntuacio')!.touched"
+      />
+    </div>
+    <div>
+      <label for="descripció" class="me-2">Descripció: </label>
+      <input
+        id="descripció"
+        tpye="text"
+        class="me-2 me-md-3 mb-3"
+        formControlName="inputDescripcio" 
+        [class.is-invalid] = "markerForm.get('inputDescripcio')!.invalid && markerForm.get('inputDescripcio')!.touched"
+      />
 
+      <label for="fav" class="me-2">Favorit</label>
+      <input
+        id="fav"
+        type="checkbox"
+        class="me-2 me-md-3 mb-3"
+        formControlName="inputFav"
+      />
+    </div>
+    <button type="submit" class="btn btn-dark text-handle" [disabled]="!markerForm.valid">Crea el punt</button>
+  </form>
 </section>
 
 <!--LIST SECTION-->
 <section>
-    <div class="punts-wrapper">
-        <h3 class="text-crimson">Col·lecció de punts guardats</h3>
-        <div class="row g-0" style="margin: 0 -16px 0 -16px">
-        <!-- <ng-container *ngIf="markersArr!=true"> -->
-            <ng-container *ngFor="let marker of markersArr(); let i = index">
-                
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 p-3">
-                        <div [id]="'card-' + i" class="card text-center h-100" style="position:relative">
-                            <!-- <app-mini-map [lat]="marker.lat" [lng]="marker.lng"></app-mini-map> -->
-                                <img (click)="emitCenterImg(marker.lat, marker.lng)" class="cursor-pointer" [src]="'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/pin-s('+ marker.lng + ',' + marker.lat + ')/' + marker.lng + ',' + marker.lat + ',14/500x300?access_token=pk.eyJ1Ijoicm9nZXItbWlyLW1pbiIsImEiOiJjbGoxbmR5cmgwc2EzM25veG12MmpsMzFsIn0._AGFhRr_UiAPltvxQ2ztiQ'" alt="mapet">
-                            <div class="card-body">
-                            <div class="">
-                                <b>{{marker.name}}</b>
-                            </div>
-                            <div class="text-crimson">
-                                Descripció: {{marker.descripcio}}
-                            </div>
-                            <div class="text-crimson">
-                                Puntuació: {{marker.puntuacio}}
-                            </div>
-                            </div>
-                            <small *ngIf="marker.default == true" style="position:absolute; top:12px; right:12px">Default point</small>
-                            <i *ngIf="marker.fav==true && marker.default == false" (click)="changeFav(marker, false)" class="fa-solid fa-star" style="position:absolute; top:12px; right:12px"></i>
-                            <i *ngIf="marker.fav==false && marker.default == false" (click)="changeFav(marker, true)" class="fa-regular fa-star" style="position:absolute; top:12px; right:12px"></i>
-                            <div class="card-footer">
-                                <button class="btn btn-outline-danger text-crimson" (click)="deleteMarker(marker.name)">Elimina</button>
-                            </div>
-                        </div>
-                    </div>
-                
-            <!-- </ng-container> -->
-        </ng-container>
+  <div class="punts-wrapper">
+    <h3 class="text-crimson">Col·lecció de punts guardats</h3>
+    <div class="row g-0" style="margin: 0 -16px 0 -16px">
+      <ng-container *ngFor="let marker of markersArr(); let i = index">
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 p-3">
+          <div
+            [id]="'card-' + i"
+            class="card text-center h-100"
+            style="position: relative"
+          >
+            <img
+              (click)="emitCenterImg(marker.lat, marker.lng)"
+              class="cursor-pointer"
+              [src]="
+                'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/pin-s(' +
+                marker.lng +
+                ',' +
+                marker.lat +
+                ')/' +
+                marker.lng +
+                ',' +
+                marker.lat +
+                ',14/500x300?access_token=pk.eyJ1Ijoicm9nZXItbWlyLW1pbiIsImEiOiJjbGoxbmR5cmgwc2EzM25veG12MmpsMzFsIn0._AGFhRr_UiAPltvxQ2ztiQ'
+              "
+              alt="mapet"
+            />
+            <div class="card-body">
+              <div class="">
+                <b>{{ marker.name }}</b>
+              </div>
+              <div class="text-crimson">
+                Descripció: {{ marker.descripcio }}
+              </div>
+              <div class="text-crimson">Puntuació: {{ marker.puntuacio }}</div>
+            </div>
+            <small
+              *ngIf="marker.default == true"
+              style="position: absolute; top: 12px; right: 12px"
+              >Default point</small
+            >
+            <i
+              *ngIf="marker.fav == true && marker.default == false"
+              (click)="changeFav(marker, false)"
+              class="fa-solid fa-star"
+              style="position: absolute; top: 12px; right: 12px"
+            ></i>
+            <i
+              *ngIf="marker.fav == false && marker.default == false"
+              (click)="changeFav(marker, true)"
+              class="fa-regular fa-star"
+              style="position: absolute; top: 12px; right: 12px"
+            ></i>
+            <div class="card-footer">
+              <button
+                class="btn btn-outline-danger text-crimson"
+                (click)="deleteMarker(marker.name)"
+              >
+                Elimina
+              </button>
+            </div>
+          </div>
         </div>
+      </ng-container>
     </div>
-    <button *ngIf="markersArr()" (click)="deleteAllMarkers()" 
-    class="btn btn-danger mx-auto mt-4 text-crimson">Elimina tots els marcadors que has afegit</button>
+  </div>
+  <button
+    *ngIf="markersArr()"
+    (click)="deleteAllMarkers()"
+    class="btn btn-danger mx-auto mt-4 text-crimson"
+  >
+    Elimina tots els marcadors que has afegit
+  </button>
 </section>
-<!-- </ng-container> -->
