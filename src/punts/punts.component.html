@@ -96,10 +96,50 @@
               <div class="">
                 <b>{{ marker.name }}</b>
               </div>
-              <div class="text-crimson">
-                Descripció: {{ marker.descripcio }}
-              </div>
-              <div class="text-crimson">Puntuació: {{ marker.puntuacio }}</div>
+              <ng-container *ngIf="selectedMarker != marker.name; else  markerInput">
+                <div class="text-crimson">
+                  Descripció: {{ marker.descripcio }}
+                </div>
+                <div class="text-crimson">Puntuació: {{ marker.puntuacio }}</div>
+              </ng-container>
+              <ng-template #markerInput>
+                <form [formGroup]="markerModifyForm"
+              (ngSubmit)="submitModifyForm(marker)" width="70%">
+                  <div>
+                  <label for="nom2" class="me-2">Nom: </label>
+                  <input
+                    id="nom2"
+                    type="text"
+                    class="me-2 me-md-3 mb-3"
+                    placeholder="nom"
+                    formControlName="inputNom2"
+                    [class.is-invalid] = "markerModifyForm.get('inputNom2')!.invalid && markerModifyForm.get('inputNom2')!.touched"
+                  />
+                  </div>
+                  <div>
+                  <label for="puntuació2" class="me-2">Puntuació: </label>
+                  <input
+                    id="puntuació2"
+                    type="number"
+                    class="me-2 me-md-3 mb-3"
+                    formControlName="inputPuntuacio2"
+                    [class.is-invalid] = "markerModifyForm.get('inputPuntuacio2')!.invalid && markerModifyForm.get('inputPuntuacio2')!.touched"
+                  />
+                  </div>
+              
+                  <div>
+                  <label for="descripció2" class="me-2">Descripció: </label>
+                  <input
+                    id="descripció2"
+                    tpye="text"
+                    class="me-2 me-md-3 mb-3"
+                    formControlName="inputDescripcio2" 
+                    [class.is-invalid] = "markerModifyForm.get('inputDescripcio2')!.invalid && markerModifyForm.get('inputDescripcio2')!.touched"
+                  />
+                  </div>
+                  <button class="btn btn-dark" type="submit" [disabled]="!markerModifyForm.valid">Envia</button>
+                </form>
+              </ng-template>
             </div>
             <small
               *ngIf="marker.default == true"
@@ -119,8 +159,10 @@
               style="position: absolute; top: 12px; right: 12px"
             ></i>
             <div class="card-footer">
-              <button
-                class="btn btn-outline-danger text-crimson"
+              <button class="btn btn-outline-dark text-crimson me-2" (click)="showModifyMarker(marker)">
+                Modifica
+              </button>
+              <button class="btn btn-outline-danger text-crimson"
                 (click)="deleteMarker(marker.name)"
               >
                 Elimina

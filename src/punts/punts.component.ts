@@ -16,6 +16,7 @@ export class PuntsComponent implements OnInit {
   currentCoords: Coords = { lat: 0, lng: 0 };
   showForm = false;
   markerForm: FormGroup;
+  markerModifyForm: FormGroup;
 
   constructor(private fb: FormBuilder, private puntsService: PuntsService,
   private renderer: Renderer2, private el: ElementRef) {
@@ -27,7 +28,13 @@ export class PuntsComponent implements OnInit {
       inputDescripcio: ["", [Validators.required]],
       inputFav: false
     });
-
+    
+    this.markerModifyForm = this.fb.group({
+      inputNom2: ["", [Validators.required]],
+      inputPuntuacio2: [0, [Validators.required]],
+      inputDescripcio2: ["", [Validators.required]],
+      inputFav2: false
+    });
     
   }
 
@@ -69,6 +76,38 @@ export class PuntsComponent implements OnInit {
   deleteMarker(markerName: string) {
     this.puntsService.deleteMarkerFromArr(markerName);
   }
+
+  showModifyMarker(marker: Punt) {
+    this.selectedMarker = marker.name;
+    this.markerModifyForm.patchValue(
+      {
+        inputNom2: marker.name,
+        inputPuntuacio2: marker.puntuacio,
+        inputDescripcio2: marker.descripcio
+      }
+    );
+  }
+
+  selectedMarker: any;
+
+  submitModifyForm(marker:Punt) {
+  const formValue = this.markerModifyForm.value;
+
+  let newPunt: Punt = {
+    name: formValue.inputNom2,
+    lat: marker.lat,//
+    lng: marker.lng,//
+    descripcio: formValue.inputDescripcio2,
+    puntuacio: formValue.inputPuntuacio2,
+    default: false,
+    fav: marker.fav//
+  }
+
+    this.puntsService.modifyMarkerOfArr(newPunt, marker.name);
+  this.markerModifyForm.reset();
+  this.selectedMarker = undefined;
+}
+
 
   changeFav(marker:Punt, val: boolean) {
     this.puntsService.changeFav(marker, val);

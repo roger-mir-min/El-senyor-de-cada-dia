@@ -35,7 +35,13 @@ export class PuntsService {
         localStorage.removeItem('elsenyor-punts');//no sé si cal, ara que getInitialvalues admet []
     }
 
+    modifyMarkerOfArr(modifiedPunt:Punt, prevName:string) {
+        const index = this.markersArray().findIndex((mark: Punt) => mark.name == prevName);
+        this.markersArray.mutate(arr => arr[index] = modifiedPunt);
+    }
+
     //en realitat l'únic valor que es canvia és .fav
+    //puc unir aquesta amb modifyMarkerOfArr, fent que aquí es substitueixi també tot el marker
     changeFav(marker: Punt, val: boolean) { 
         //guardo posició en variable
         const index = this.markersArray().findIndex((mark: Punt) => mark.name == marker.name);
