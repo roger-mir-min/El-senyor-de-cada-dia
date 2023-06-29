@@ -102,7 +102,7 @@ export class PuntsComponent implements OnInit {
     lng: marker.lng,//
     descripcio: formValue.inputDescripcio2,
     puntuacio: formValue.inputPuntuacio2,
-    default: false,
+    default: marker.default,
     fav: marker.fav//
   }
 

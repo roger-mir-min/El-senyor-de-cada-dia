@@ -35,6 +35,11 @@ export class RutesService {
         this.rutesArray.update(arr => []);
         localStorage.removeItem('elsenyor-rutes');//crec que no cal
     }
+
+    modifyRutaOfArr(modifiedRuta: Ruta, prevName: string) {
+        const index = this.rutesArray().findIndex((ruta: Ruta) => ruta.name == prevName);
+        this.rutesArray.mutate(arr => arr[index] = modifiedRuta);
+    }
     
     //en realitat l'únic valor que es canvia és .fav
     changeFav(ruta: Ruta, val: boolean) {

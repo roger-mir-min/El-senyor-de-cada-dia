@@ -23,6 +23,7 @@ export class MapRutesComponent implements OnInit {
   
   showArray = false;
   rutaForm: FormGroup;
+  modifyRutaForm: FormGroup;
   currentCoords: Coords[] = [];
 
   //INPUT VARIABLES
@@ -39,6 +40,13 @@ export class MapRutesComponent implements OnInit {
       inputPuntuacio: [0, [Validators.required]],
       inputDescripcio: ["", [Validators.required]],
       inputFav: false
+    });
+
+    this.modifyRutaForm = this.fb.group({
+      inputNom2: ["", [Validators.required]],
+      inputPuntuacio2: [0, [Validators.required]],
+      inputDescripcio2: ["", [Validators.required]],
+      inputFav2: false
     });
   }
 
@@ -126,6 +134,40 @@ export class MapRutesComponent implements OnInit {
   changeFav(ruta:Ruta, val: boolean) {
   this.rutesService.changeFav(ruta, val);
   }
+
+  selectedToModifyRouteName: string | undefined;
+
+
+  
+  showModifyRutaForm(ruta: Ruta) {
+        this.selectedToModifyRouteName = ruta.name;
+        this.modifyRutaForm.patchValue(
+      {
+        inputNom2: ruta.name,
+        inputPuntuacio2: ruta.puntuacio,
+        inputDescripcio2: ruta.descripcio
+      }
+    );
+   
+  }
+
+  modifyRuta(ruta: Ruta) {
+     const formValue = this.modifyRutaForm.value;
+
+    let newRuta: Ruta = {
+      name: formValue.inputNom2,
+      coords: ruta.coords,//
+      descripcio: formValue.inputDescripcio2,
+      puntuacio: formValue.inputPuntuacio2,
+      default: ruta.default,
+      fav: ruta.fav//
+    }
+
+    this.rutesService.modifyRutaOfArr(newRuta, ruta.name);
+    this.modifyRutaForm.reset();
+    this.selectedToModifyRouteName = undefined;
+  }
+
 
   highlightedCard: any;
 
