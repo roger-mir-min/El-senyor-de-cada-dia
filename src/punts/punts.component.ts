@@ -1,11 +1,14 @@
 import { Component, OnInit, ViewChild, signal, Renderer2, ElementRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Coords, Punt } from 'src/shared/models/interfaces';
 import { PuntsService } from './services/punts.service';
 import { MapComponent } from './components/map/map.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-punts',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, MapComponent],
   templateUrl: './punts.component.html',
   styleUrls: ['./punts.component.scss']
 })

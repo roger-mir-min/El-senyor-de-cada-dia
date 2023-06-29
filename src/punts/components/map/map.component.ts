@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output, effect, signal } from '@angular/core';
 import { LatLngExpression, Map, marker, tileLayer } from 'leaflet';
 import { PuntsService } from 'src/punts/services/punts.service';
@@ -7,6 +8,8 @@ import { addBaseLayerToMap, centerMap } from 'src/shared/utils/functions';
 
 @Component({
   selector: 'app-map',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })

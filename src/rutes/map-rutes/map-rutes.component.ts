@@ -3,12 +3,15 @@ import { Map, marker, polyline } from 'leaflet';
 import { Coords } from 'src/shared/models/interfaces';
 import { RutesService } from '../services/rutes.service';
 import { Ruta } from '../../shared/models/interfaces';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { addBaseLayerToMap, centerMap } from 'src/shared/utils/functions';
 import { createBaseMap } from 'src/shared/utils/functions';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-map-rutes',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './map-rutes.component.html',
   styleUrls: ['./map-rutes.component.scss']
 })
