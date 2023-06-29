@@ -96,12 +96,16 @@
               <div class="">
                 <b>{{ marker.name }}</b>
               </div>
+              
+              <!--NORMAL LAYOUT-->
               <ng-container *ngIf="selectedMarker != marker.name; else  markerInput">
                 <div class="text-crimson">
                   Descripció: {{ marker.descripcio }}
                 </div>
                 <div class="text-crimson">Puntuació: {{ marker.puntuacio }}</div>
               </ng-container>
+
+              <!--MODIFY PUNT FORM LAYOUT-->
               <ng-template #markerInput>
                 <form [formGroup]="markerModifyForm"
               (ngSubmit)="submitModifyForm(marker)" width="70%">
